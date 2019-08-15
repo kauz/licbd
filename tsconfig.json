@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "paths": { "*": ["types/*"] },
+        "types": [
+            "node"
+        ],
+        "typeRoots": [
+            "./node_modules/@types",
+            "./types"
+        ],
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "ES2016",
+        "noImplicitAny": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "rootDir": "src",
+        "baseUrl": ".",
+        "allowJs": false
+    },
+    "include": [
+        "src/**/*", "types/basic-ftp.d.ts"
+    ],
+    "exclude": [
+        "dist",
+        "doc",
+        "node_modules"
+    ]
+}
