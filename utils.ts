@@ -76,3 +76,15 @@ export const drawGreenRect = (image: any, rect: any, opts: any = { thickness: 2 
 export const drawRedRect = (image: any, rect: any, opts: any = { thickness: 2 }) =>
   // @ts-ignore
   drawRect(image, rect, new cv.Vec(0, 0, 255), opts);
+
+
+// @ts-ignore
+export function drawPolygon(image: any, polygons, color = new cv.Vec(0, 255, 0), opts: any = { thickness: 4}) {
+  image.drawPolylines(
+    polygons,
+    true,
+    color,
+    opts.thickness,
+    cv.LINE_8
+  );
+}
