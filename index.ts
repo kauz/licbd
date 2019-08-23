@@ -38,16 +38,20 @@ setImmediate(async () => {
         const car = data[i];
 
         const imagesCount = get(car, 'metaData.imagesCount');
-        const carId = get(car, '_id');
+        const imagesByApp = get(car, 'metaData.imagesByApp');
 
-        if (!imagesCount) {
+        if (!imagesCount || imagesByApp) {
           continue;
         }
 
-        const images = (await getImagesInfo(carId)).map(o => o.imageIdentifier);
+        const carId = get(car, '_id');
+
+        const images = (await getImagesInfo(carId)).map(o => {
+          return { id: o.imageIdentifier, number: Number(o.metadata.image_code.replace('simple_', ''))}
+        });
 
         images.forEach(async img => {
-          await fetchImage(carId, img);
+          await fetchImage(carId, img.id, imagesCount, img.number);
         });
 
         masterData.push({ carId, imagesCount, images });
@@ -69,7 +73,7 @@ setImmediate(async () => {
 async function getImagesInfo(carId: string): Promise<any[]> {
   try {
     const imageInfo = await CronicleUtils.retry(() => {
-      return imboReq.getCleanedCarImages(carId);
+      return imboReq.getCleanedCarImages(carId, { 'fields[]': ['imageIdentifier', 'metadata'], limit: 0, metadata: 1, cleaned: true });
     }, 10, 2000, true);
     return get(imageInfo, 'images', []);
   } catch (e) {
@@ -77,9 +81,9 @@ async function getImagesInfo(carId: string): Promise<any[]> {
   }
 }
 
-function fetchImage(carId: string, imageId: string) {
+function fetchImage(carId: string, imageId: string, count: number, imageNumber: number) {
   const imageUrl = `https://images.auto.de/carimage/${carId}/${imageId}/large`;
-  const fileName = rootPath(`images/${carId}_${imageId}.webp`);
+  const fileName = rootPath(`images/${carId}:${imageId}:${count}:${imageNumber}.webp`);
   return new Promise(((resolve, reject) => {
 
     const loader = request(imageUrl).pipe(createWriteStream(fileName));
