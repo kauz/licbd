@@ -13,7 +13,7 @@
     "@bytebrand/autode-request": "^0.1.44",
     "@bytebrand/cronicle-helper": "^0.4.6",
     "dotenv": "^8.0.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "request": "^2.88.0"
   },
   "devDependencies": {
